@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Create Text Content</title>
+</head>
+<body>
+<div sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')">
+<h1>Create New Text Content</h1>
+
+    <form th:action="${textContent.contentId == null ? '/contents/text?sectionId='+textContent.sectionId+'&'+'tbookId='+textContent.tbookId+'&chapId='+textContent.chapId : '/contents/text?sectionId='+textContent.sectionId+'&'+'tbookId='+textContent.tbookId+'&chapId='+textContent.chapId+'&contentId='+textContent.contentId}"
+            th:object="${textContent}"
+            th:method="${textContent.contentId == null ? 'post' : 'put'}">
+    <!-- Hidden fields for associated section and textbook details -->
+    <input type="hidden" th:field="*{sectionId}" />
+    <input type="hidden" th:field="*{tbookId}" />
+    <input type="hidden" th:field="*{chapId}" />
+
+    <div th:if="${textContent.contentId == null}">
+        <label for="contentId">Content ID:</label>
+        <input type="text" id="contentId" th:field="*{contentId}" />
+    </div>
+
+    <div th:if="${textContent.contentId != null}">
+        <input type="hidden" th:field="*{contentId}" />
+    </div>
+
+    <!-- Field for Text Content Data -->
+    <div>
+        <label for="data">Text Data:</label>
+        <textarea id="data" th:field="*{data}" placeholder="Enter text content here"></textarea>
+    </div>
+
+    <!-- Common fields -->
+    <div>
+        <label for="ownedBy">Owned By:</label>
+        <input type="text" id="ownedBy" th:field="*{ownedBy}" />
+    </div>
+
+    <div>
+        <label for="isHidden">Hidden:</label>
+        <input type="checkbox" id="isHidden" th:field="*{hidden}" />
+    </div>
+
+    <br>
+        <button type="submit" th:text="${textContent.contentId == null ? 'Create Text Content' : 'Update Text Content'}"></button>
+</form>
+
+<a th:href="@{/sections/section(tbookId=${textContent.tbookId}, sno=${textContent.sectionId}, chapId=${textContent.chapId})}">Back to Section</a>
+</div>
+</body>
+</html>

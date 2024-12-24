@@ -1,0 +1,92 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Activity Details</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--&lt;!&ndash;div to add a new question and answer&ndash;&gt;-->
+
+<!--<div class="container">-->
+<!--    <h1 th:text="'Activity: ' + ${activity.activityId}"></h1>-->
+
+<!--    <div th:if="${activity.questions.isEmpty()}">-->
+<!--        <p>No questions available for this activity.</p>-->
+<!--    </div>-->
+
+<!--    <div th:unless="${activity.questions.isEmpty()}">-->
+<!--        <ul style="list-style-type: none">-->
+<!--            <li th:each="question, qStat : ${activity.questions}">-->
+<!--                <div class="question-block">-->
+<!--                    <h2 th:text="'Q' + ${question.question_id} + '. ' + ${question.question}"></h2>-->
+<!--                    <form th:action="@{/question(questionId=${question.question_id},activityId=${activity.activityId},contentId=${activity.contentId},sectionId=${activity.sectionId},chapterId=${activity.chapId},tbookId=${activity.tbookId})}" th:method="delete" style="display:inline;">-->
+<!--                        <button type="submit">Delete</button>-->
+<!--                    </form>-->
+<!--                    <div class="answer-list" >-->
+<!--                        <div th:each="answer, ansInd : ${question.answers}" class="answer-item">-->
+<!--&lt;!&ndash;                            <span th:text="${answer.answerText}"></span>&ndash;&gt;-->
+<!--                            <input type="radio" th:id="'answer-' + ${ansInd.index}"  th:name="'answers[' + ${question.question_id} + '].answerId'" th:text="${answer.answerText}">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </div>-->
+
+<!--    <a th:href="@{/contents(sectionId=${activity.sectionId},chapId=${activity.chapId},tbookId=${activity.tbookId})}">Back to Contents</a>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Activity Details</title>
+</head>
+<body>
+<!-- Container for the Activity -->
+<div class="container">
+    <h1 th:text="'Activity: ' + ${activity.activityId}"></h1>
+
+    <div th:if="${activity.questions.isEmpty()}">
+        <p>No questions available for this activity.</p>
+    </div>
+
+    <div th:unless="${activity.questions.isEmpty()}">
+        <ul style="list-style-type: none; padding: 0;">
+            <li th:each="question, qStat : ${activity.questions}">
+                <div class="question-block" style="margin-bottom: 20px;">
+                    <!-- Displaying the Question -->
+                    <h2 style="display: inline-block;" th:text="'Q' + ${question.question_id} + '. ' + ${question.question}"></h2>
+
+                    <!-- Buttons for Delete and Edit placed inline -->
+                    <div style="display: inline-block; margin-left: 10px;">
+                        <form th:action="@{/question(questionId=${question.question_id},activityId=${activity.activityId},contentId=${activity.contentId},sectionId=${activity.sectionId},chapterId=${activity.chapId},tbookId=${activity.tbookId})}"
+                              th:method="delete" style="display: inline;">
+                            <button type="submit">Delete</button>
+                        </form>
+                        <a th:href="@{/question/edit(questionId=${question.question_id}, activityId=${activity.activityId}, contentId=${activity.contentId}, sectionId=${activity.sectionId}, chapId=${activity.chapId}, tbookId=${activity.tbookId})}">
+                            <button type="button">Edit</button>
+                        </a>
+                    </div>
+
+                    <!-- List of Answers -->
+                    <div class="answer-list" style="margin-top: 10px;">
+                        <div th:each="answer, ansInd : ${question.answers}" class="answer-item">
+                            <input type="radio"
+                                   th:id="'answer-' + ${ansInd.index}"
+                                   th:name="'answers[' + ${question.question_id} + '].answerId'"
+                                   th:value="${answer.answerId}"
+                                   th:checked="${ansInd.index+1 == question.answer_id}" />
+                            <label th:for="'answer-' + ${ansInd.index}" th:text="${answer.answerText}"></label>
+                            <div th:text="'Justification:' + ${answer.justification}"></div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Back to Contents Link -->
+    <a th:href="@{/contents(sectionId=${activity.sectionId},chapId=${activity.chapId},tbookId=${activity.tbookId})}">Back to Contents</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Textbook Details</title>
+</head>
+<body>
+<h1>Textbook Details</h1>
+<p><strong>ID:</strong> <span th:text="${textbook.uid}">ID</span></p>
+<p><strong>Title:</strong> <span th:text="${textbook.title}">Title</span></p>
+<div sec:authorize="hasAnyRole('ADMIN', 'FACULTY', 'TA')">
+    <a th:href="@{/chapters/new(tbookId=${textbook.uid})}">Add New Chapter</a>
+</div>
+<h2>Chapters</h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Chapter ID</th>
+        <th>Chapter Code</th>
+        <th>Chapter Title</th>
+        <th sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')">Hidden</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="chapter, iterIndex : ${textbook.chapters}">
+        <td th:text="${iterIndex.index+1}">Chapter ID</td>
+<!--        <td th:text="${chapter.cno}">Chapter ID</td>-->
+        <td th:text="${chapter.chapterCode}">Chapter Code</td>
+        <td th:text="${chapter.title}">Chapter Title</td>
+        <td  sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')" th:text="${chapter.hidden}">Hidden</td>
+        <td>
+
+            <a th:href="@{/chapters/chapter(tbookId=${textbook.uid}, chapId=${chapter.cno})}">View</a>
+            <div sec:authorize="hasAnyRole('ADMIN', 'FACULTY', 'TA')">
+            <a th:href="@{/chapters/edit(tbookId=${textbook.uid}, chapId=${chapter.cno})}">Edit</a>
+            </div>
+            <div sec:authorize="hasAnyRole('ADMIN', 'FACULTY', 'TA')">
+            <form th:action="@{/chapters(tbookId=${textbook.uid}, chapId=${chapter.cno})}" method="post" th:method="delete" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!--<a th:href="@{/textbooks}">Back</a>-->
+
+<div sec:authorize="hasAnyRole('ADMIN')">
+    <a th:href="@{/landing/admin}">Back</a>
+</div>
+<div sec:authorize="hasAnyRole('FACULTY')">
+    <a th:href="@{/landing/faculty}">Back</a>
+</div>
+<div sec:authorize="hasAnyRole('STUDENT')">
+    <a th:href="@{/landing/studentnew}">Back</a>
+</div>
+<div sec:authorize="hasAnyRole('TA')">
+    <a th:href="@{/landing/ta}">Back</a>
+</div>
+</body>
+</html>

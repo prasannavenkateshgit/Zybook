@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Section Count</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Section Count in Chapter</h1>
+
+    <!-- Display the textbook and chapter ID -->
+    <p>Textbook ID: <span th:text="${tbookId}"></span></p>
+    <p>Chapter ID: <span th:text="${chapId}"></span></p>
+
+    <!-- Display the count of sections in the chapter -->
+    <p>Total Sections in Chapter: <span th:text="${count}"></span></p>
+
+    <!-- Button to go back or navigate as needed -->
+    <a href="/some/return/path" class="btn">Back to Chapters</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Student Landing Page</title>
+</head>
+
+<body>
+<h1>Welcome</h1>
+<nav>
+    <ol>
+        <li><a th:href="@{/enrollment/new}">Enroll in Courses</a></li>
+        <br>
+        <li><a th:href="@{/login?role=student}">Sign In</a></li>
+        <br>
+        <li><a th:href="@{/logout}">Go Back</a></li>
+    </ol>
+</nav>
+</body>
+</html>

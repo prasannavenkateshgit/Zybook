@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Largest Waiting List Course</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Course with the Largest Waiting List</h1>
+
+    <!-- Check if there is a course in the waiting list -->
+    <div th:if="${waitinglist != null}">
+        <p><strong>Course ID:</strong> <span th:text="${waitinglist.courseId}">Course ID</span></p>
+        <p><strong>Waiting List Count:</strong> <span th:text="${waitinglist.waitingListCount}">Waiting List Count</span></p>
+    </div>
+
+    <!-- Message if there is no course with a waiting list -->
+    <div th:if="${waitinglist == null}">
+        <p>No courses currently have a waiting list.</p>
+    </div>
+
+    <!-- Back button or link to navigate as needed -->
+    <a href="/courses" class="btn">Back to Courses</a>
+</div>
+</body>
+</html>

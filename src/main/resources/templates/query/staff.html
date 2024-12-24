@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Course Staff</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Faculty and TAs by Course</h1>
+
+    <!-- Check if the list has any staff members -->
+    <div th:if="${staff.isEmpty()}">
+        <p>No faculty or TAs assigned to courses currently.</p>
+    </div>
+
+    <!-- Display table if there are staff members -->
+    <div th:if="${!staff.isEmpty()}">
+        <table>
+            <thead>
+            <tr>
+                <th>Course Title</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Role</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Iterate over each staff member and display their details -->
+            <tr th:each="staffMember : ${staff}">
+                <td th:text="${staffMember.courseTitle}">Course Title</td>
+                <td th:text="${staffMember.firstName}">First Name</td>
+                <td th:text="${staffMember.lastName}">Last Name</td>
+                <td th:text="${staffMember.role}">Role</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Back button or link to navigate as needed -->
+    <a href="/courses" class="btn">Back to Courses</a>
+</div>
+</body>
+</html>

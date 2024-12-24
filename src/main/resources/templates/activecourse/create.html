@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Course Enrollment</title>
+</head>
+<body>
+<h2>Create Active Course</h2>
+
+<div th:if="${message}">
+    <p th:text="${message}" style="color: green;"></p>
+</div>
+
+<form th:action="@{/activecourse/registeractive}" th:object="${activecourse}" method="post">
+
+    <div th:if="${activecourse.courseId == null}">
+        <label for="courseId">Course ID:</label>
+        <input type="text" id="courseId" th:field="*{courseId}" required/>
+    </div>
+
+    <div>
+        <label for="title">Course Title:</label>
+        <input type="text" id="title" th:field="*{title}" required/>
+    </div>
+
+    <div>
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" th:field="*{startDate}" required/>
+    </div>
+
+    <div>
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" th:field="*{endDate}" required/>
+    </div>
+
+    <div>
+        <label for="courseType">Course Type:</label>
+        <select id="courseType" th:field="*{courseType}" required>
+            <option value="">Select Course Type</option>
+            <option value="Active">Active</option>
+            <option value="Evaluation">Evaluation</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="tbookId">Textbook ID:</label>
+        <select id="tbookId" th:field="*{tbookId}" required>
+            <option value="">Select Textbook: </option>
+            <option th:each="tbook : ${unUsedTbooks}" th:value="${tbook.uid}" th:text="${tbook.title}"></option>
+        </select>
+    </div>
+
+    <div>
+        <label for="courseCapacity">Course Capacity:</label>
+        <input type="number" id="courseCapacity" th:field="*{courseCapacity}" required/>
+    </div>
+
+    <div>
+        <label for="courseToken">Course Token:</label>
+        <input type="text" id="courseToken" th:field="*{courseToken}" required/>
+    </div>
+
+    <div>
+        <label for="professorId">Assign Professor:</label>
+        <input type="text" id="professorId" th:field="*{professorId}" required/>
+    </div>
+
+    <br>
+    <button type="submit">Save</button>
+<!--    <a th:href="@{/landing/admin}">Cancel</a>-->
+    <button type="button" th:onclick="|window.location.href='@{/landing/admin}'|">
+        Cancel
+    </button>
+</form>
+<br>
+<a th:href="@{/courses}">Back to List</a>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title th:text="${section.sno == null ? 'Add New Section' : 'Edit Section'}">Form</title>
+</head>
+<body>
+<div sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')">
+<h2> Chapter: <span th:text="${chapter.title}">Chapter title</span></h2>
+<h2 th:text="${section.sno == null ? 'Add New Section' : 'Edit Section'}">Form Title</h2>
+<form th:action="${section.sno == null ? '/sections?tbookId=' + section.tbookId + '&chapId=' + section.chapId : '/sections/update?tbookId=' + section.tbookId + '&chapId=' + section.chapId + '&sno=' + section.sno}"
+      th:object="${section}"
+      th:method="${section.sno == null ? 'post' : 'put'}">
+
+    <!-- Hidden field to store the chapter ID if editing an existing section -->
+    <input type="hidden" th:field="*{chapId}"/>
+
+    <div>
+        <label for="sno">Section Number:</label>
+        <input type="text" id="sno" th:field="*{sno}" required/>
+    </div>
+
+    <!-- Display chapterCode only if editing an existing chapter -->
+<!--    <div th:if="${chapter.cno != null}">-->
+<!--        <label for="chapterCode">Chapter Code:</label>-->
+<!--        <input type="text" id="chapterCode" th:field="*{chapterCode}" required/>-->
+<!--    </div>-->
+
+    <div>
+        <label for="title">Title:</label>
+        <input type="text" id="title" th:field="*{title}" required/>
+    </div>
+
+    <div>
+        <label for="hidden">Hidden:</label>
+        <input type="checkbox" id="hidden" th:field="*{hidden}"/>
+    </div>
+
+    <br>
+    <button type="submit">Save</button>
+</form>
+<br>
+<a th:href="@{/chapters/chapter(tbookId=${section.tbookId}, chapId=${section.chapId})}">Back to Chapter</a>
+<br>
+</div>
+<div sec:authorize="hasAnyRole('ADMIN')">
+    <a th:href="@{/landing/admin}">Landing Page</a>
+</div>
+</body>
+</html>

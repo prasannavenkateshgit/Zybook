@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>All Contents</title>
+</head>
+<body>
+<h1>All Contents</h1>
+<div sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')">
+<a th:href="@{/contents/new/text(tbookId=${tbookId}, chapId=${chapId}, sectionId=${sectionId})}">Create New Text Content</a><br>
+<a th:href="@{/contents/new/image(tbookId=${tbookId}, chapId=${chapId}, sectionId=${sectionId})}">Create New Image Content</a><br>
+</div>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Content ID</th>
+        <th sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')">Type</th>
+        <th sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')">Owned By</th>
+        <th sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')">Hidden</th>
+        <th>Data</th>
+        <th sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')">Actions</th>
+        <th>Activities</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="content, iterIndex : ${allContents}">
+        <td th:text="${iterIndex.index+1}">Content ID</td>
+        <td  sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')" th:text="${content.contentType}">Content Type</td>
+        <td  sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')" th:text="${content.ownedBy}">Owned By</td>
+        <td  sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')" th:text="${content.isHidden} ? 'Yes' : 'No'">Hidden</td>
+        <td>
+            <!-- Display text data if the content is of type TEXT -->
+            <span th:if="${content.contentType == 'text'}">
+                <span th:text="${content.data}">Text Data</span>
+            </span>
+
+            <!-- Display image if the content is of type IMAGE -->
+            <span th:if="${content.contentType == 'image'}">
+<!--                <span th:text="${content.data != null ? 'Data is available' : 'No data'}"></span>-->
+                <img th:src="@{'data:image/png;base64,'+${content.data}}"
+                alt="Image Content" style="max-width: 100px; max-height: 100px;"/>
+            </span>
+
+        </td>
+        <div sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')">
+        <td>
+            <span th:if="${content.contentType == 'text'}">
+    <a th:href="@{/contents/edit/text(tbookId=${tbookId}, chapId=${chapId}, sectionId=${sectionId}, contentId=${content.contentId})}">
+        Edit Text
+    </a>
+
+</span>
+
+            <span th:if="${content.contentType == 'image'}">
+                <a th:href="@{/contents/edit/image(tbookId=${tbookId}, chapId=${chapId}, sectionId=${sectionId}, contentId=${content.contentId})}">
+                    Edit Image
+                </a>
+            </span> <br>
+            <div th:if="${(currentRole == 'ta' and content.ownedBy == 'ta') or (currentRole == 'faculty' and (content.ownedBy == 'faculty' or content.ownedBy == 'ta')) or (currentRole == 'admin' and (content.ownedBy == 'faculty' or content.ownedBy == 'ta' or content.ownedBy == 'admin'))}">
+            <form th:action="@{/contents(tbookId=${tbookId}, chapId=${chapId}, sectionId=${sectionId}, contentId=${content.contentId})}" th:method="delete" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+            </div>
+
+        </td>
+        </div>
+        <td>
+            <div sec:authorize="!hasAnyRole('STUDENT')">
+            <a th:href="@{/activity/all(tbookId=${tbookId}, chapId=${chapId}, sectionId=${sectionId}, contentId=${content.contentId})}">Activities</a>
+            </div>
+
+            <div sec:authorize="hasAnyRole('STUDENT')">
+                <a th:href="@{/participation/edit(tbookId=${tbookId}, chapId=${chapId}, sectionId=${sectionId}, contentId=${content.contentId}, userId=${userId})}">View</a>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<a th:href="@{/chapters/chapter(tbookId=${tbookId}, chapId=${chapId})}">Back to Chapter</a>
+<br>
+<div sec:authorize="hasAnyRole('ADMIN')">
+    <a th:href="@{/landing/admin}">Landing Page</a>
+</div>
+
+</body>
+</html>

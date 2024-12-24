@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Student Activity Quiz</title>
+    <style>
+        /* Content Box Styling */
+        .content-box {
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #f0f8f5;
+        }
+
+        /* Activity Box Styling */
+        .activity-box {
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+
+        /* Question Box Styling */
+        .question-box {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #fff;
+        }
+
+        /* Navigation Button Styling */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .navigation-buttons a {
+            display: inline-block;
+            padding: 10px 20px;
+            color: white;
+            background-color: #007bff;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .navigation-buttons a.disabled {
+            pointer-events: none;
+            opacity: 0.5;
+            background-color: gray;
+        }
+
+        /* Submit Quiz Button Styling */
+        .submit-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .submit-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .score-display {
+            font-size: 1.5em;           /* Make the text larger */
+            font-weight: bold;           /* Bold text */
+            color: #ffffff;              /* White text color for contrast */
+            background-color: #28a745;   /* Green background color (success style) */
+            padding: 10px 15px;          /* Padding around the text */
+            border-radius: 8px;          /* Rounded corners */
+            display: inline-block;       /* Display inline with padding */
+            margin-top: 20px;            /* Spacing from top */
+        }
+    </style>
+</head>
+<body>
+<div sec:authorize="hasAnyRole('STUDENT')">
+<h1>Content and Activities</h1>
+
+<!-- Content Block -->
+<div class="content-box">
+    <section>
+        <h2>Content</h2>
+        <div sec:authorize="hasAnyRole('FACULTY', 'TA')">
+        <p><strong>Content Type:</strong> <span th:text="${content.contentType}">Content Type</span></p>
+        <p><strong>Hidden:</strong> <span th:text="${content.isHidden} ? 'Yes' : 'No'">Hidden Status</span></p>
+        </div>
+        <!-- Display Content Based on Type -->
+        <section>
+            <div th:if="${content.contentType == 'text'}">
+                <div sec:authorize="hasAnyRole('FACULTY', 'TA')">
+                <h3>Text Content</h3>
+                </div>
+                <p th:text="${content.data != null ? content.data : 'No text data available'}">Text Data</p>
+            </div>
+            <div th:if="${content.contentType == 'image'}">
+                <div sec:authorize="hasAnyRole('FACULTY', 'TA')">
+                <h3>Image Content</h3>
+                </div>
+                <div th:if="${content.data != null}">
+                    <img th:src="@{'data:image/png;base64,' + ${content.data}}" alt="Image Content" style="max-width: 100%; max-height: 300px; margin-top: 10px;" />
+                </div>
+                <div th:if="${content.data == null}">
+                    <p>No image data available</p>
+                </div>
+            </div>
+        </section>
+    </section>
+</div>
+
+<!-- Navigation Buttons for Prev and Next -->
+<div class="navigation-buttons">
+    <a th:href="@{/participation/edit(
+                chapId=${content.chapId},
+                sectionId=${content.sectionId},
+                tbookId=${content.tbookId},
+                userId=${userId},
+                contentId=${prev})}"
+       th:classappend="${prev == -1} ? 'disabled' : ''">
+        Prev
+    </a>
+
+    <a th:href="@{/participation/edit(
+                chapId=${content.chapId},
+                sectionId=${content.sectionId},
+                tbookId=${content.tbookId},
+                userId=${userId},
+                contentId=${next})}"
+       th:classappend="${next == -1} ? 'disabled' : ''">
+        Next
+    </a>
+</div>
+
+<!-- Form to submit the quiz answers -->
+<form th:action="@{/participation}" th:method="post">
+
+    <!-- Loop through each activity, enclosed in a box -->
+    <div th:each="activity, activityStat : ${activities}" class="activity-box">
+        <h2 th:text="'Activity ID: ' + ${activity.activityId}">Activity ID</h2>
+        <div class="score-display" th:if="${activity.score != null}">
+            <p><strong>Your Score:</strong> <span th:text="${activity.score}"> Score</span></p>
+        </div>
+
+        <!-- Loop through each question in the activity, enclosed in a box -->
+        <div th:each="question, questionStat : ${activity.questions}" class="question-box">
+            <h3 th:text="|Q.${questionStat.index+1} ${question.question}|">Question Text</h3>
+
+            <!-- Display answer information if already answered -->
+            <div th:if="${question.answer != null}">
+                <p><strong>Correct Answer:</strong> <span th:text="${question.answer_id}">Answer Text</span></p>
+                <p><strong>Your Answer:</strong> <span th:text="${question.userResponse}"> User Answer</span></p>
+                <p><strong>Justification:</strong> <span th:text="${question.justification}">Justification</span></p>
+            </div>
+
+            <!-- Loop through each answer option for the question -->
+            <div th:each="answer : ${question.answers}">
+                <label>
+                    <input type="radio"
+                           th:name="'responses[' + ${activity.activityId} + '][' + ${question.question_id} + ']'"
+                           th:value="${answer.answerId}"
+                           th:disabled="${question.answer != null}"/>
+                    <span th:text="${answer.answerText}">Option Text</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Submit button within the activity box -->
+        <button type="submit" class="submit-button" th:disabled="${activity.questions.?[answer != null].size() == activity.questions.size()}">
+            Submit Quiz
+        </button>
+    </div>
+    <div class="navigation-buttons">
+        <a th:href="@{/chapters/chapter(tbookId=${activities[0].getTbookId()},chapId=${activities[0].getChapId()})}" th:text="'Back to Sections'"/>
+    </div>
+    <!-- Hidden fields for backend context -->
+    <input type="hidden" th:name="contentId" th:value="${content.contentId}" />
+    <input type="hidden" th:name="sectionId" th:value="${content.sectionId}" />
+    <input type="hidden" th:name="chapId" th:value="${content.chapId}" />
+    <input type="hidden" th:name="tbookId" th:value="${content.tbookId}" />
+    <input type="hidden" th:name="userId" th:value="${userId}" />
+</form>
+</div>
+</body>
+</html>

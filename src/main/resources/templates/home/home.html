@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home Page</title>
+</head>
+<body>
+<h1>Welcome to the Zybooks Application</h1>
+
+<p>Please select your role to proceed:</p>
+
+<ul>
+    <li><a th:href="@{/landing/student}">Student Login</a></li>
+    <li><a th:href="@{/login?role=faculty}">Faculty Login</a></li>
+    <li><a th:href="@{/login?role=admin}">Admin Login</a></li>
+    <li><a th:href="@{/login?role=ta}">TA Login</a></li>
+</ul>
+
+</body>
+</html>

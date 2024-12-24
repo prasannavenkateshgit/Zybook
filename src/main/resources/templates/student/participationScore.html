@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Activity Scores</title>
+</head>
+<body>
+<h1>User Scores for Textbook (ID: <span th:text="${#lists.isEmpty(scores) ? 'N/A' : scores[0].tbookId}"></span>)</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Activity ID</th>
+        <th>Section ID</th>
+        <th>Content ID</th>
+        <th>Chapter ID</th>
+        <th>Score</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="score : ${scores}">
+        <td th:text="${score.activityId}">Activity ID</td>
+        <td th:text="${score.sectionId}">Section ID</td>
+        <td th:text="${score.contentId}">Content ID</td>
+        <td th:text="${score.chapterId}">Chapter ID</td>
+        <td th:text="${score.score != -1 ? score.score : 'Not Attempted'}">Score</td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{/landing/student}">Back</a>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title th:text="${course.courseId == null ? 'Add New Course' : 'Edit Course'}">Form</title>
+</head>
+<body>
+<h2>Create a course</h2>
+<div sec:authorize="hasAnyRole('ADMIN')">
+<form th:action="${course.courseId == null ? '/courses' : '/courses/update?courseId=' + course.courseId}"
+      th:object="${course}"
+      th:method="${course.courseId == null ? 'post' : 'put'}">
+
+    <div th:if="${course.courseId == null}">
+        <label for="courseId">Course ID:</label>
+        <input type="text" id="courseId" th:field="*{courseId}" required/>
+    </div>
+
+    <div>
+        <label for="title">Course Title:</label>
+        <input type="text" id="title" th:field="*{title}" required/>
+    </div>
+
+    <div>
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" th:field="*{startDate}" required/>
+    </div>
+
+    <div>
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" th:field="*{endDate}" required/>
+    </div>
+
+    <div>
+        <label for="courseType">Course Type:</label>
+        <select id="courseType" th:field="*{courseType}" required>
+            <option value="">Select Course Type</option>
+            <option value="Active">Active</option>
+            <option value="Evaluation">Evaluation</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="tbookId">Textbook ID:</label>
+        <select id="tbookId" th:field="*{tbookId}" required>
+            <option value="">Select Textbook: </option>
+            <option th:each="tbook : ${unUsedTbooks}" th:value="${tbook.uid}" th:text="${tbook.title}"></option>
+        </select>
+    </div>
+
+    <div>
+        <label for="professorId">Assign Professor:</label>
+        <input type="text" id="professorId" th:field="*{professorId}" required/>
+    </div>
+
+    <br>
+    <button type="submit">Save</button>
+</form>
+<br>
+<a th:href="@{/courses}">Back to List</a>
+<div sec:authorize="hasAnyRole('ADMIN')">
+    <a th:href="@{/landing/admin}">Landing Page</a>
+</div>
+</div>
+</body>
+</html>

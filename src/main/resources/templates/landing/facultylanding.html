@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Faculty Page</title>
+</head>
+<body>
+<div sec:authorize="hasAnyRole('FACULTY')">
+<h1>Faculty Dashboard</h1>
+<nav>
+    <ol>
+        <li><a th:href="@{/courses/active(userId=${userId})}">Go to Active Courses</a></li>
+        <br>
+        <li><a th:href="@{/courses/evaluation(userId=${userId})}">Go to Evaluation Courses</a></li>
+        <br>
+        <li><a th:href="@{/courses/all(userId=${userId})}">View All Courses</a></li>
+        <br>
+        <li><a th:href="@{/users/edit/{userId}(userId=${userId})}">Change Password</a></li>
+        <br>
+        <li><a th:href="@{/logout}">Logout</a></li>
+    </ol>
+</nav>
+</div>
+</body>
+</html>
+</html>

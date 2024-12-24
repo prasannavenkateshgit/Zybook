@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>TA Page</title>
+</head>
+<body>
+<div sec:authorize="hasAnyRole('TA')">
+<h1>TA Dashboard</h1>
+<nav>
+    <ol>
+        <li><a th:href="@{/courses/active(userId=${userId})}">Go to Active Course</a></li>
+        <br>
+        <li><a th:href="@{/courses/all(userId=${userId})}">View Courses</a></li>
+        <br>
+        <li><a th:href="@{/users/edit/{userId}(userId=${userId})}">Change Password</a></li>
+        <br>
+        <li><a th:href="@{/logout}">Logout</a></li>
+    </ol>
+</nav>
+</div>
+</body>
+</html>

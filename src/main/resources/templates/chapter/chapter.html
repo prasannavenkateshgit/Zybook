@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Chapter Details</title>
+</head>
+<body>
+<h1>Chapter Details</h1>
+<p><strong>ID:</strong> <span th:text="${chapter.cno}">ID</span></p>
+<p><strong>Chapter Code:</strong> <span th:text="${chapter.chapterCode}">Code</span></p>
+<p><strong>Title:</strong> <span th:text="${chapter.title}">Title</span></p>
+<div sec:authorize="hasAnyRole('ADMIN', 'FACULTY', 'TA')">
+<p><strong>Hidden:</strong> <span th:text="${chapter.hidden}">Hidden</span></p>
+</div>
+<p><strong>Text Book:</strong> <span th:text="${chapter.tbookId}">Code</span></p>
+
+<div sec:authorize="hasAnyRole('FACULTY','ADMIN','TA')">
+    <a th:href="@{/sections/new(tbookId=${chapter.tbookId}, chapId=${chapter.cno})}">Add New Section</a>
+</div>
+
+<h2>Sections</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Section ID</th>
+        <th>Section Title</th>
+        <th sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')">Hidden</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="section, iterStat : ${chapter.sections}" th:if="${chapter.sections != null}">
+        <td th:text="${iterStat.index+1}">Section ID</td> <!-- Added indexing to display default numbering-->
+<!--        <td th:text="${section.sno}">Section ID</td>-->
+        <td th:text="${section.title}">Section Title</td>
+        <td  sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')" th:text="${section.hidden}">Hidden</td>
+        <td>
+            <a th:href="@{/sections/section(tbookId=${chapter.tbookId}, chapId=${chapter.cno}, sno=${section.sno})}">View</a>
+            <div sec:authorize="hasAnyRole('ADMIN','FACULTY','TA')">
+                <a th:href="@{/sections/edit(tbookId=${chapter.tbookId}, chapId=${chapter.cno}, sno=${section.sno})}">Edit</a>
+            </div>
+            <div sec:authorize="hasAnyRole('ADMIN','FACULTY','TA')">
+                <form th:action="@{/sections(tbookId=${chapter.tbookId}, chapId=${chapter.cno}, sno=${section.sno})}" method="post" th:method="delete" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{/textbooks/{tbookId}(tbookId=${chapter.tbookId})}">Back</a>
+<br>
+<div sec:authorize="hasAnyRole('ADMIN')">
+    <a th:href="@{/landing/admin}">Landing Page</a>
+</div>
+</body>
+</html>

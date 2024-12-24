@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Active Course Strength</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Active Courses - Faculty and Student Count</h1>
+
+    <!-- Check if the list has any active courses -->
+    <div th:if="${courseInfoDTOs.isEmpty()}">
+        <p>No active courses available currently.</p>
+    </div>
+
+    <!-- Display table if there are active courses -->
+    <div th:if="${!courseInfoDTOs.isEmpty()}">
+        <table>
+            <thead>
+            <tr>
+                <th>Course ID</th>
+                <th>Faculty Name</th>
+                <th>Total Students</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Iterate over each course info and display details -->
+            <tr th:each="courseInfo : ${courseInfoDTOs}">
+                <td th:text="${courseInfo.courseId}">Course ID</td>
+                <td th:text="${courseInfo.facultyName}">Faculty Name</td>
+                <td th:text="${courseInfo.totalStudents}">Total Students</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Back button or link to navigate as needed -->
+    <a href="/courses" class="btn">Back to Courses</a>
+</div>
+</body>
+</html>

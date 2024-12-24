@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title th:text="${chapter.cno == null ? 'Add New Chapter' : 'Edit Chapter'}">Form</title>
+</head>
+<body>
+<div sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')">
+<h2> TextBook: <span th:text="${textbook.title}">Textbook title</span></h2>
+<h2 th:text="${chapter.cno == null ? 'Add New Chapter' : 'Edit Chapter'}">Form Title</h2>
+<form th:action="${chapter.cno == null ? '/chapters' : '/chapters/update?tbookId=' + chapter.tbookId + '&chapId=' + chapter.cno}"
+      th:object="${chapter}"
+      th:method="${chapter.cno == null ? 'post' : 'put'}">
+
+
+    <!-- Hidden field to store the textbook ID if editing an existing chapter -->
+    <input type="hidden" th:field="*{tbookId}"/>
+
+    <div>
+        <label for="cno">Chapter Number:</label>
+        <input type="text" id="cno" th:field="*{cno}" required/>
+    </div>
+
+    <!-- Display chapterCode only if editing an existing chapter -->
+    <div th:if="${chapter.cno != null}">
+        <label for="chapterCode">Chapter Code:</label>
+        <input type="text" id="chapterCode" th:field="*{chapterCode}" required/>
+    </div>
+
+    <div>
+        <label for="title">Title:</label>
+        <input type="text" id="title" th:field="*{title}" required/>
+    </div>
+
+    <div>
+        <label for="hidden">Hidden:</label>
+        <input type="checkbox" id="hidden" th:field="*{hidden}"/>
+    </div>
+
+    <br>
+    <button type="submit">Save</button>
+</form>
+<br>
+<a th:href="@{/textbooks/{tbookId}(tbookId=${chapter.tbookId})}">Back to List</a>
+<br>
+</div>
+<div sec:authorize="hasAnyRole('ADMIN')">
+    <a th:href="@{/landing/admin}">Landing Page</a>
+</div>
+</body>
+</html>

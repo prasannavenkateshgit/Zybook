@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>User List</title>
+</head>
+<body>
+<div sec:authorize="hasAnyRole('ADMIN','FACULTY')">
+<h1>User List</h1>
+<a th:href="@{/users/new}">Add New User</a>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.userId}">ID</td>
+        <td th:text="${user.fname}">First Name</td>
+        <td th:text="${user.lname}">Last Name</td>
+        <td th:text="${user.email}">Email</td>
+        <td th:text="${user.roleName}">Role</td>
+        <td>
+            <a th:href="@{/users/{id}(id=${user.userId})}">View</a>
+            <a th:href="@{/users/edit/{id}(id=${user.userId})}">Edit</a>
+            <form th:action="@{/users/{id}(id=${user.userId})}" th:method="delete" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div sec:authorize="hasAnyRole('ADMIN')">
+    <a th:href="@{/landing/admin}">Back to Landing Page</a>
+</div>
+<div sec:authorize="hasAnyRole('FACULTY')">
+    <a th:href="@{/landing/faculty}">Back to Landing Page</a>
+</div>
+</div>
+</body>
+</html>

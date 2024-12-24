@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Section Details</title>
+</head>
+<body>
+<h1>Section Details</h1>
+<p><strong>ID:</strong> <span th:text="${section.sno}">ID</span></p>
+<p><strong>Title:</strong> <span th:text="${section.title}">Title</span></p>
+<p><strong>Hidden:</strong> <span th:text="${section.hidden}">Hidden</span></p>
+<p><strong>Chapter ID:</strong> <span th:text="${section.chapId}">ID</span></p>
+<p><strong>Text Book:</strong> <span th:text="${section.tbookId}">Code</span></p>
+
+<a th:href="@{/content/new(tbookId=${section.tbookId}, chapId=${section.chapId}, sno=${section.sno})}">Add New Content</a>
+
+<h2>Contents</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Content ID</th>
+        <th>Content Type</th>
+        <th>Hidden</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="content : ${section.contents}" th:if="${section.contents != null}">
+        <td th:text="${content.contentId}">Content ID</td>
+        <td th:text="${content.contentType}">Content Type</td>
+        <td th:text="${content.hidden}">Hidden</td>
+        <td>
+<!--            <a th:href="@{/contents/content(tbookId=${chapter.tbookId}, chapId=${chapter.cno}, sectionId=${section.sno}, contentId=${content.contentId})}">View</a>-->
+<!--            <a th:href="@{/contents/edit(tbookId=${chapter.tbookId}, chapId=${chapter.cno}, sectionId=${section.sno}, contentId=${content.contentId})}">Edit</a>-->
+<!--            <form th:action="@{/contents/content(tbookId=${chapter.tbookId}, chapId=${chapter.cno}, sectionId=${section.sno}, contentId=${content.contentId})}" method="post" th:method="delete" style="display:inline;">-->
+<!--                <button type="submit">Delete</button>-->
+<!--            </form>-->
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!--<a th:href="@{/chapters/chapter(tbookId=${textbook.uid}, chapId=${chapter.cno})}">Back</a>-->
+</body>
+</html>

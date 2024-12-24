@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Course List</title>
+</head>
+<body>
+<h1>Active Course List</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Course ID</th>
+        <th>Title</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Course Type</th>
+        <th>Textbook ID</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="course : ${courses}">
+        <td th:text="${course.courseId}">Course ID</td>
+        <td th:text="${course.title}">Title</td>
+        <td th:text="${course.startDate}">Start Date</td>
+        <td th:text="${course.endDate}">End Date</td>
+        <td th:text="${course.courseType}">Course Type</td>
+        <td th:text="${course.tbookId}">Textbook ID</td>
+        <td>
+            <a th:href="@{/courses/{id}(id=${course.courseId})}">View</a>
+            <a th:href="@{/landing/active(userId=${userId}, courseId=${course.courseId})}">Active Course Landing</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div sec:authorize="hasAnyRole('ADMIN')">
+    <a th:href="@{/landing/admin}">Home</a>
+</div>
+<div sec:authorize="hasAnyRole('FACULTY')">
+    <a th:href="@{/landing/faculty}">Home</a>
+</div>
+<div sec:authorize="hasAnyRole('STUDENT')">
+    <a th:href="@{/landing/student}">Home</a>
+</div>
+<div sec:authorize="hasAnyRole('TA')">
+    <a th:href="@{/landing/ta}">Home</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sample Demo Queries</title>
+</head>
+<body>
+
+<h1>Demo Queries</h1>
+<nav>
+    <ol>
+        <li><a th:href="@{/query/countsections?tbookId=1&chapId=1}"># Sections in Chapter</a></li>
+        <br>
+        <li><a th:href="@{/query/staff}">Course Staff</a></li>
+        <br>
+        <li><a th:href="@{/query/activestrength}">Active Course Strength</a></li>
+        <br>
+        <li><a th:href="@{/query/lwaiting}">Largest Waitlist</a></li>
+        <br>
+        <li><a th:href="@{/contents/perChapter?tbookId=1&chapId=2}">Contents of Chapter-2</a></li>
+        <br>
+        <li>
+            <a th:href="@{/activity/query?sectionId=1&chapId=1&tbookId=1&contentId=1&activityId=1}" >Incorrect Answers</a>
+        </li>
+        <br>
+        <li><a th:href="@{/logout}">Logout</a></li>
+    </ol>
+</nav>
+
+</body>
+</html>

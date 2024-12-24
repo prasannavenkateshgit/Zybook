@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title th:text="${user.userId == null ? 'Add New User' : 'Edit User'}">Form</title>
+</head>
+<body>
+<div sec:authorize="hasAnyRole('ADMIN','FACULTY','TA')">
+
+<h2 th:text="${user.userId == null ? 'Add New User' : 'Edit User'}">Add or Edit User Profile</h2>
+<form th:action="${user.userId == null ? '/users' : '/users?userId=' + user.userId}"
+      th:object="${user}"
+      th:method="${user.userId == null ? 'post' : 'put'}">
+    <div>
+        <label for="userId">User ID:</label>
+        <input type="text" id="userId" th:field="*{userId}" required/>
+    </div>
+
+    <div>
+        <label for="userFname">User First Name:</label>
+        <input type="text" id="userFname" th:field="*{fname}" required/>
+    </div>
+
+    <div>
+        <label for="userLname">User Last Name:</label>
+        <input type="text" id="userLname" th:field="*{lname}" required/>
+    </div>
+
+    <div>
+        <label for="userEmail">User Email:</label>
+        <input type="text" id="userEmail" th:field="*{email}" required/>
+    </div>
+    <div th:if="${user.userId != null}">
+        <label for="userPassword">Enter User Current Password:</label>
+        <input type="password" id="userPassword" th:field="*{password}" required/>
+    </div>
+    <div>
+        <label for="newUserPassword">Enter New Password:</label>
+        <div th:if="${user.userId!=null}">
+            <input type="password" id="newUserPassword" th:field="*{newPassword}" required/>
+        </div>
+        <div th:if="${user.userId==null}">
+            <input type="password" th:field="*{password}" required/>
+        </div>
+    </div>
+    <div th:if="${user.userId != null}">
+        <label for="confirmNewPassword">Confirm New Password:</label>
+        <input type="password" id="confirmNewPassword" th:field="*{confirmPassword}" required/>
+    </div>
+    <div>
+        <label for="userRoleName">User Role:</label>
+        <select id="userRoleName" th:field="*{roleName}" required>
+            <option value="">Select Role</option>
+            <option value="ta">TA</option>
+            <option value="faculty">Faculty</option>
+            <option value="student">Student</option>
+        </select>
+    </div>
+
+    <br>
+    <button type="submit">Save Changes</button>
+</form>
+<br>
+    <div sec:authorize="hasAnyRole('ADMIN')">
+<a th:href="@{/users}">Users List</a>
+    </div>
+<div sec:authorize="hasAnyRole('ADMIN')">
+    <a th:href="@{/landing/admin}">Back</a>
+</div>
+    <div sec:authorize="hasAnyRole('TA')">
+        <a th:href="@{/landing/ta}">Back</a>
+    </div>
+    <div sec:authorize="hasAnyRole('FACULTY')">
+        <a th:href="@{/landing/faculty}">Back</a>
+    </div>
+</div>
+</body>
+</html>

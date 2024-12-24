@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title th:text="${imageContent.contentId} != null ? 'Update Image Content' : 'Create Image Content'">Image Content</title>
+</head>
+<body>
+<div sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')">
+<h1 th:text="${imageContent.contentId} != null ? 'Update Image Content' : 'Create Image Content'">Image Content</h1>
+
+<form th:action="${imageContent.contentId} != null ? @{/contents/image(tbookId=${imageContent.tbookId}, sectionId=${imageContent.sectionId}, chapId=${imageContent.chapId}, contentId = ${imageContent.contentId})} : @{/contents/image(tbookId=${imageContent.tbookId}, sectionId=${imageContent.sectionId}, chapId=${imageContent.chapId})}"
+      method="post" enctype="multipart/form-data"
+      th:object="${imageContent}"
+      th:method="${imageContent.contentId == null ? 'post' : 'put'}">
+
+    <!-- Hidden fields for associated section and textbook details -->
+    <input type="hidden" th:field="*{sectionId}" />
+    <input type="hidden" th:field="*{tbookId}" />
+    <input type="hidden" th:field="*{chapId}" />
+
+    <!-- Conditionally show Content ID (hidden for create) -->
+    <div th:if="${imageContent.contentId == null}">
+        <label for="contentId">Content ID:</label>
+        <input type="text" id="contentId" th:field="*{contentId}" />
+    </div>
+
+    <div th:if="${imageContent.contentId != null}">
+        <input type="hidden" th:field="*{contentId}" />
+    </div>
+
+    <!-- Field for Image Content Data -->
+    <div>
+        <label for="imageData">Image File:</label>
+        <input type="file" id="imageData" th:field="*{image}" accept=".png, .jpeg, .jpg" th:if="${imageContent.contentId == null}" required />
+
+        <!-- Optional: Show existing image for update -->
+        <div th:if="${imageContent.contentId != null}">
+            <input type="file" id="editImageData" name="image" accept=".png,.gif, .jpeg, .jpg" th:if="${imageContent.contentId != null}" required />
+            <img th:src="@{'data:image/png;base64,'+${imageContent.data}}"
+                 alt="Image Content" style="max-width: 100px; max-height: 100px;"/>
+            <p>If you'd like to replace the image, upload a new one.</p>
+        </div>
+    </div>
+
+
+    <label for="ownedBy">Owned By:</label>
+    <div sec:authorize="hasAnyRole('FACULTY', 'ADMIN')">
+        <input id="ownedBy" th:field="*{ownedBy}" />
+    </div>
+
+    <div sec:authorize="hasRole('TA')" th:if="${imageContent.contentId == null}">
+        <input id="ownedBy" th:field="*{ownedBy}" />
+    </div>
+
+
+
+    <div>
+        <label for="isHidden">Hidden:</label>
+        <input type="checkbox" id="isHidden" th:field="*{hidden}" />
+    </div>
+
+    <br>
+    <button type="submit" th:text="${imageContent.contentId} != null ? 'Update Image Content' : 'Create Image Content'">
+        Submit
+    </button>
+</form>
+
+<a th:href="@{/sections/section(tbookId=${imageContent.tbookId}, sno=${imageContent.sectionId}, chapId=${imageContent.chapId})}">Back to Section</a>
+</div>
+</body>
+</html>

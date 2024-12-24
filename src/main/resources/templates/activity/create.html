@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title th:text="'Add New Activity'">Form</title>
+</head>
+<body>
+<div sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')">
+<h2> <span>Adding New Activity</span></h2>
+<form th:action= "@{/activity(contentId=${activity.contentId},sectionId=${activity.sectionId},chapId=${activity.chapId},tbookId=${activity.tbookId})}"
+      th:object="${activity}"
+      th:method= "'post'">
+
+    <div>
+        <label for="aid">Activity Number:</label>
+        <input type="text" id="aid" th:field="*{activityId}" required/>
+    </div>
+
+    <br>
+    <button type="submit">Save</button>
+</form>
+<br>
+<a th:href="@{/activity/all(sectionId=${activity.sectionId},chapId=${activity.chapId},tbookId=${activity.tbookId},contentId=${activity.contentId})}">Back to Activites</a>
+</div>
+</body>
+</html>

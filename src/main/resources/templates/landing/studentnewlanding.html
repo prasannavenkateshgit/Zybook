@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Student Landing Page</title>
+</head>
+<body>
+<div sec:authorize="hasAnyRole('STUDENT')">
+<h1>Student Dashboard</h1>
+<nav>
+    <ol>
+        <li><a th:href="@{/enrollment/courses(userId=${userId})}">Enrolled Courses</a></li>
+        <br>
+        <li>
+            <a th:href="@{/users/notifications/{id}(id=${userId})}"> Notifications </a>
+        </li>
+        <br>
+        <li><a th:href="@{/logout}">Logout</a></li>
+    </ol>
+</nav>
+</div>
+</body>
+</html>

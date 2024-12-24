@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Create QnA</title>
+</head>
+<body>
+<div sec:authorize="hasAnyRole('FACULTY', 'ADMIN', 'TA')">
+<div class="add-question-form">
+    <h2 th:text="'Add New Question'">Question</h2>
+    <form
+            th:action="@{/question}"
+            th:object="${question}"
+            th:method="post"
+            th:hidden="*{isHidden}">
+        <!-- Question Input -->
+        <div class="form-group">
+
+            <label for="questionid">Enter Question ID:</label>
+            <input type="text" id="questionid" th:field="*{question_id}"></input>
+            <label for="questionContent">Question:</label>
+            <input type="text" id="questionContent" name="questionContent" placeholder="Enter your question" th:field="*{question}" required/>
+            <input type="hidden" id="activityId" th:field="*{activity_id}"/>
+            <input type="hidden" id="contentId" th:field="*{content_id}"/>
+            <input type="hidden" id="sectionId" th:field="*{section_id}"/>
+            <input type="hidden" id="chapter_id" th:field="*{chapter_id}"/>
+            <input type="hidden" id="tbook_id" th:field="*{tbook_id}"/>
+        </div>
+
+        <!-- Answer Choices -->
+        <div class="form-group">
+
+            <input type="hidden" id="answerid1" th:field="*{answers[0].answerId}" placeholder="Answer ID" th:value="1">
+            <label for="answer1">Answer Choice 1:</label>
+            <input type="text" id="answer1" name="answers[0]" placeholder="Enter answer choice 1" th:field="*{answers[0].answerText}" required />
+            <label for="justification1">Justification:</label>
+            <input type="text" id="justification1" th:field="*{answers[0].justification}"/>
+        </div>
+
+        <div class="form-group">
+
+            <input type="hidden" id="answerid2" th:field="*{answers[1].answerId}" placeholder="Answer ID" value="2">
+            <label for="answer2">Answer Choice 2:</label>
+            <input type="text" id="answer2" name="answers[1]" placeholder="Enter answer choice 2" th:field="*{answers[1].answerText}" required />
+            <label for="justification2">Justification:</label>
+            <input type="text" id="justification2" th:field="*{answers[1].justification}" />
+        </div>
+
+        <div class="form-group">
+            <input type="hidden" id="answerid3" th:field="*{answers[2].answerId}" placeholder="Answer ID" value="3">
+<!--            <input type="hidden" id="answerid3" name="answers[2].answerId" value="3">-->
+            <label for="answer3">Answer Choice 3:</label>
+            <input type="text" id="answer3" name="answers[2]" placeholder="Enter answer choice 3" th:field="*{answers[2].answerText}" />
+            <label for="justification3">Justification:</label>
+            <input type="text" id="justification3" th:field="*{answers[2].justification}" />
+        </div>
+
+        <div class="form-group">
+
+            <input type="hidden" id="answerid4" th:field="*{answers[3].answerId}" placeholder="Answer ID" value="4">
+<!--            <input type="hidden" id="answerid4" name="answers[3].answerId" value="4">-->
+            <label for="answer4">Answer Choice 4:</label>
+            <input type="text" id="answer4" name="answers[3]" placeholder="Enter answer choice 4" th:field="*{answers[3].answerText}" />
+            <label for="justification4">Justification:</label>
+            <input type="text" id="justification4" th:field="*{answers[3].justification}" />
+        </div>
+        <div>
+            <label for="answerID">Enter correct answer option</label>
+            <input type="text" id="answerID" th:field="*{answer_id}">
+        </div>
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Add Question</button>
+        <button type="button" class="btn btn-primary" th:onclick="|window.location.href='@{/activity/all(tbookId=${question.tbook_id},chapId=${question.chapter_id},sectionId=${question.section_id},contentId=${question.content_id})}'|">Cancel</button>
+    </form>
+</div>
+
+<br>
+<div sec:authorize="hasAnyRole('ADMIN')">
+    <a th:href="@{/landing/admin}">Landing Page</a>
+</div>
+</div>
+</body>
+</html>
